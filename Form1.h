@@ -1,4 +1,5 @@
 #pragma once
+#include "DB.h"
 
 namespace CppCLRWinFormsProject {
 
@@ -18,9 +19,11 @@ namespace CppCLRWinFormsProject {
 		Form1(void)
 		{
 			InitializeComponent();
+
 			//
 			//TODO: Add the constructor code here
 			//
+			this->db = gcnew DB();
 		}
 
 	protected:
@@ -34,7 +37,9 @@ namespace CppCLRWinFormsProject {
 				delete components;
 			}
 		}
-	private: System::Windows::Forms::DataGridView^ dataGridView1;
+	private: System::Windows::Forms::DataGridView^ data_grid;
+	protected:
+
 	private: System::Windows::Forms::TextBox^ txtNombre;
 	protected:
 
@@ -45,6 +50,7 @@ namespace CppCLRWinFormsProject {
 	private: System::Windows::Forms::Label^ label2;
 	private: System::Windows::Forms::Label^ label3;
 	private: System::Windows::Forms::Label^ label4;
+	private: DB^ db = gcnew DB();
 
 	private:
 		/// <summary>
@@ -59,7 +65,7 @@ namespace CppCLRWinFormsProject {
 		/// </summary>
 		void InitializeComponent(void)
 		{
-			this->dataGridView1 = (gcnew System::Windows::Forms::DataGridView());
+			this->data_grid = (gcnew System::Windows::Forms::DataGridView());
 			this->txtNombre = (gcnew System::Windows::Forms::TextBox());
 			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
 			this->textBox3 = (gcnew System::Windows::Forms::TextBox());
@@ -68,16 +74,16 @@ namespace CppCLRWinFormsProject {
 			this->label2 = (gcnew System::Windows::Forms::Label());
 			this->label3 = (gcnew System::Windows::Forms::Label());
 			this->label4 = (gcnew System::Windows::Forms::Label());
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridView1))->BeginInit();
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->data_grid))->BeginInit();
 			this->SuspendLayout();
 			// 
-			// dataGridView1
+			// data_grid
 			// 
-			this->dataGridView1->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
-			this->dataGridView1->Location = System::Drawing::Point(39, 52);
-			this->dataGridView1->Name = L"dataGridView1";
-			this->dataGridView1->Size = System::Drawing::Size(410, 219);
-			this->dataGridView1->TabIndex = 0;
+			this->data_grid->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
+			this->data_grid->Location = System::Drawing::Point(39, 52);
+			this->data_grid->Name = L"data_grid";
+			this->data_grid->Size = System::Drawing::Size(410, 219);
+			this->data_grid->TabIndex = 0;
 			// 
 			// txtNombre
 			// 
@@ -117,7 +123,6 @@ namespace CppCLRWinFormsProject {
 			this->label1->Size = System::Drawing::Size(44, 13);
 			this->label1->TabIndex = 6;
 			this->label1->Text = L"Nombre";
-			this->label1->Click += gcnew System::EventHandler(this, &Form1::label1_Click);
 			// 
 			// label2
 			// 
@@ -159,17 +164,23 @@ namespace CppCLRWinFormsProject {
 			this->Controls->Add(this->textBox3);
 			this->Controls->Add(this->textBox1);
 			this->Controls->Add(this->txtNombre);
-			this->Controls->Add(this->dataGridView1);
+			this->Controls->Add(this->data_grid);
 			this->Name = L"Form1";
 			this->Text = L"Form1";
-			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->dataGridView1))->EndInit();
+			this->Load += gcnew System::EventHandler(this, &Form1::Form1_Load);
+			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->data_grid))->EndInit();
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
 		}
 #pragma endregion
-	
-private: System::Void label1_Click(System::Object^ sender, System::EventArgs^ e) {
+private: System::Void Form1_Load(System::Object^ sender, System::EventArgs^ e) {
+	this->consultarDatos();
 }
+	public: void consultarDatos() {
+		this->db->abrirConexion();
+		this->data_grid->DataSource = this->db->getData();
+		this->db->cerrarConexion();
+	}
 };
 }
