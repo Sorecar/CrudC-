@@ -15,6 +15,9 @@ public:
 	DataTable^ getData();
 	void abrirConexion();
 	void cerrarConexion();
+	void insertarEstudiante(String^ nombre, int edad, String^ carrera);
+	void editarEstudiante(int id, String^ nombre, int edad, String^ carrera);
+	void eliminarEstudiante(int id);
 
 
 

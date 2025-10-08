@@ -1,5 +1,4 @@
 #include "pch.h"
-#include "ConexionBD.h"
 
 using namespace System;
 
@@ -8,7 +7,7 @@ using namespace System;
 //    return 0;
 // }
 
-#include "Form1.h"
+#include "FormEstudiantes.h"
 
 using namespace System::Windows::Forms;
 
