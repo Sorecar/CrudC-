@@ -58,7 +58,7 @@ void DB::insertarEstudiante(String^ nombre, int edad, String^ carrera) {
 
 void DB::editarEstudiante(int id, String^ nombre, int edad, String^ carrera) {
 	try {
-		MySqlCommand^ cmd = gcnew MySqlCommand("UPDATE estudiantes SET nombre = @nombre, edad = @edad, carrera = @carrera WHERE id = @id", this->conn);
+		MySqlCommand^ cmd = gcnew MySqlCommand("UPDATE estudiantes SET nombre = @nombre, edad = @edad, carrera = @carrera WHERE id_estudiante = @id", this->conn);
 		cmd->Parameters->AddWithValue("@id", id);
 		cmd->Parameters->AddWithValue("@nombre", nombre);
 		cmd->Parameters->AddWithValue("@edad", edad);
@@ -76,7 +76,7 @@ void DB::editarEstudiante(int id, String^ nombre, int edad, String^ carrera) {
 
 void DB::eliminarEstudiante(int id) {
 	try {
-		MySqlCommand^ cmd = gcnew MySqlCommand("DELETE FROM estudiantes WHERE id = @id", this->conn);
+		MySqlCommand^ cmd = gcnew MySqlCommand("DELETE FROM estudiantes WHERE id_estudiante = @id", this->conn);
 		cmd->Parameters->AddWithValue("@id", id);
 		cmd->ExecuteNonQuery();
 	}

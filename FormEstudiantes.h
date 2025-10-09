@@ -91,8 +91,12 @@ namespace CppCLRWinFormsProject {
 			this->data_grid->ColumnHeadersHeightSizeMode = System::Windows::Forms::DataGridViewColumnHeadersHeightSizeMode::AutoSize;
 			this->data_grid->Location = System::Drawing::Point(39, 52);
 			this->data_grid->Name = L"data_grid";
-			this->data_grid->Size = System::Drawing::Size(410, 185);
+			this->data_grid->ReadOnly = true;
+			this->data_grid->RowHeadersVisible = false;
+			this->data_grid->SelectionMode = System::Windows::Forms::DataGridViewSelectionMode::FullRowSelect;
+			this->data_grid->Size = System::Drawing::Size(395, 185);
 			this->data_grid->TabIndex = 0;
+			this->data_grid->DoubleClick += gcnew System::EventHandler(this, &Form1::data_grid_DoubleClick);
 			// 
 			// txtNombre
 			// 
@@ -227,11 +231,28 @@ namespace CppCLRWinFormsProject {
 		this->textCarrera->Text = "";
 	}
 private: System::Void btnEditar_Click(System::Object^ sender, System::EventArgs^ e) {
-	CRUD::EditEstudiante^ editForm = gcnew CRUD::EditEstudiante();
-	editForm->ShowDialog();
+	sendDatos();
+	
 }
 private: System::Void btn_Eliminar_Click(System::Object^ sender, System::EventArgs^ e) {
+	String^ id = Convert::ToString(data_grid->SelectedRows[0]->Cells[0]->Value);
+	this->db->abrirConexion();
+	this->db->eliminarEstudiante(Int32::Parse(id));
+	this->db->cerrarConexion();
+	this->consultarDatos();
+}
+private: System::Void data_grid_DoubleClick(System::Object^ sender, System::EventArgs^ e) {
+	sendDatos();
+}
 
+private: Void sendDatos() {
+	String^ id = Convert::ToString(data_grid->SelectedRows[0]->Cells[0]->Value);
+	String^ nombre = Convert::ToString(data_grid->SelectedRows[0]->Cells[1]->Value);
+	String^ edad = Convert::ToString(data_grid->SelectedRows[0]->Cells[2]->Value);
+	String^ carrera = Convert::ToString(data_grid->SelectedRows[0]->Cells[3]->Value);
+	CRUD::EditEstudiante^ editForm = gcnew CRUD::EditEstudiante();
+	editForm->sendDatos(id, nombre, edad, carrera);
+	editForm->ShowDialog();
 }
 };
 }

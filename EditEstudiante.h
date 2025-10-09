@@ -1,4 +1,5 @@
 #pragma once
+#include "DB.h"
 
 namespace CRUD {
 
@@ -21,6 +22,7 @@ namespace CRUD {
 		}
 
 	protected:
+		int idEstudiante;
 		~EditEstudiante()
 		{
 			if (components)
@@ -28,10 +30,16 @@ namespace CRUD {
 				delete components;
 			}
 		}
-	private: System::Windows::Forms::TextBox^ textBox1;
+	private: System::Windows::Forms::TextBox^ txt_Nombre;
+	private: System::Windows::Forms::TextBox^ txt_edad;
+	private: System::Windows::Forms::TextBox^ txt_carrera;
+	private: DB^ db = gcnew DB();
+
 	protected:
-	private: System::Windows::Forms::TextBox^ textBox2;
-	private: System::Windows::Forms::TextBox^ textBox3;
+
+	protected:
+
+
 	private: System::Windows::Forms::Label^ label1;
 	private: System::Windows::Forms::Label^ label2;
 	private: System::Windows::Forms::Label^ label3;
@@ -51,9 +59,9 @@ namespace CRUD {
 		/// </summary>
 		void InitializeComponent(void)
 		{
-			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
-			this->textBox2 = (gcnew System::Windows::Forms::TextBox());
-			this->textBox3 = (gcnew System::Windows::Forms::TextBox());
+			this->txt_Nombre = (gcnew System::Windows::Forms::TextBox());
+			this->txt_edad = (gcnew System::Windows::Forms::TextBox());
+			this->txt_carrera = (gcnew System::Windows::Forms::TextBox());
 			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->label2 = (gcnew System::Windows::Forms::Label());
 			this->label3 = (gcnew System::Windows::Forms::Label());
@@ -61,26 +69,26 @@ namespace CRUD {
 			this->btn_Cancelar = (gcnew System::Windows::Forms::Button());
 			this->SuspendLayout();
 			// 
-			// textBox1
+			// txt_Nombre
 			// 
-			this->textBox1->Location = System::Drawing::Point(123, 47);
-			this->textBox1->Name = L"textBox1";
-			this->textBox1->Size = System::Drawing::Size(163, 20);
-			this->textBox1->TabIndex = 0;
+			this->txt_Nombre->Location = System::Drawing::Point(123, 47);
+			this->txt_Nombre->Name = L"txt_Nombre";
+			this->txt_Nombre->Size = System::Drawing::Size(163, 20);
+			this->txt_Nombre->TabIndex = 0;
 			// 
-			// textBox2
+			// txt_edad
 			// 
-			this->textBox2->Location = System::Drawing::Point(123, 116);
-			this->textBox2->Name = L"textBox2";
-			this->textBox2->Size = System::Drawing::Size(163, 20);
-			this->textBox2->TabIndex = 1;
+			this->txt_edad->Location = System::Drawing::Point(123, 116);
+			this->txt_edad->Name = L"txt_edad";
+			this->txt_edad->Size = System::Drawing::Size(163, 20);
+			this->txt_edad->TabIndex = 1;
 			// 
-			// textBox3
+			// txt_carrera
 			// 
-			this->textBox3->Location = System::Drawing::Point(123, 190);
-			this->textBox3->Name = L"textBox3";
-			this->textBox3->Size = System::Drawing::Size(163, 20);
-			this->textBox3->TabIndex = 2;
+			this->txt_carrera->Location = System::Drawing::Point(123, 190);
+			this->txt_carrera->Name = L"txt_carrera";
+			this->txt_carrera->Size = System::Drawing::Size(163, 20);
+			this->txt_carrera->TabIndex = 2;
 			// 
 			// label1
 			// 
@@ -139,9 +147,9 @@ namespace CRUD {
 			this->Controls->Add(this->label3);
 			this->Controls->Add(this->label2);
 			this->Controls->Add(this->label1);
-			this->Controls->Add(this->textBox3);
-			this->Controls->Add(this->textBox2);
-			this->Controls->Add(this->textBox1);
+			this->Controls->Add(this->txt_carrera);
+			this->Controls->Add(this->txt_edad);
+			this->Controls->Add(this->txt_Nombre);
 			this->Name = L"EditEstudiante";
 			this->Text = L"Editar Estudiante";
 			this->ResumeLayout(false);
@@ -151,11 +159,31 @@ namespace CRUD {
 #pragma endregion
 
 	private: System::Void btn_Guardar_Click(System::Object^ sender, System::EventArgs^ e) {
-		
+		String^ nombre = this->txt_Nombre->Text;
+		int edad = Int32::Parse(this->txt_edad->Text);
+		String^ carrera = this->txt_carrera->Text;
+		this->db->abrirConexion();
+		this->db->editarEstudiante(this->idEstudiante, nombre, edad, carrera);
+		this->db->cerrarConexion();
+		this->Close();
 	}
 
 	private: System::Void btn_Cancelar_Click(System::Object^ sender, System::EventArgs^ e) {
 		this->Close();
+	}
+
+	public: void sendDatos(int id, String^ nombre, String^ edad, String^ carrera) {
+		this->txt_Nombre->Text = nombre;
+		this->txt_edad->Text = edad;
+		this->txt_carrera->Text = carrera;
+	}
+	
+	public: void sendDatos(System::String^ id, System::String^ nombre, System::String^ edad, System::String^ carrera) {
+		this->idEstudiante = Int32::Parse(id);
+		this->txt_Nombre->Text = nombre;
+		this->txt_edad->Text = edad;
+		this->txt_carrera->Text = carrera;
+		MessageBox::Show("ID Recibido: " + idEstudiante);
 	}
 
 };
