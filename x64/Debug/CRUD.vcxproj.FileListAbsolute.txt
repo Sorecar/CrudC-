@@ -1,5 +1,5 @@
 C:\Users\sorec\source\repos\CRUD\CRUD\x64\Debug\CRUD.vcxproj.AssemblyReference.cache
+C:\Users\sorec\source\repos\CRUD\CRUD\x64\Debug\CRUD.EditEstudiante.resources
+C:\Users\sorec\source\repos\CRUD\CRUD\x64\Debug\CRUD.FormEstudiantes.resources
 C:\Users\sorec\source\repos\CRUD\CRUD\x64\Debug\CRUD.vcxproj.GenerateResource.cache
 C:\Users\sorec\source\repos\CRUD\CRUD\x64\Debug\CRUD.vcxproj.Up2Date
-C:\Users\sorec\source\repos\CRUD\CRUD\x64\Debug\CRUD.FormEstudiantes.resources
-C:\Users\sorec\source\repos\CRUD\CRUD\x64\Debug\CRUD.EditEstudiante.resources
