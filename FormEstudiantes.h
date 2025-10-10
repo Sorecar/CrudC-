@@ -104,6 +104,7 @@ namespace CppCLRWinFormsProject {
 			this->txtNombre->Name = L"txtNombre";
 			this->txtNombre->Size = System::Drawing::Size(206, 20);
 			this->txtNombre->TabIndex = 2;
+			this->txtNombre->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &Form1::textBox_KeyDown);
 			// 
 			// textEdad
 			// 
@@ -111,6 +112,8 @@ namespace CppCLRWinFormsProject {
 			this->textEdad->Name = L"textEdad";
 			this->textEdad->Size = System::Drawing::Size(206, 20);
 			this->textEdad->TabIndex = 3;
+			this->textEdad->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &Form1::textBox_KeyDown);
+			this->textEdad->KeyPress += gcnew System::Windows::Forms::KeyPressEventHandler(this, &Form1::textEdad_KeyPress);
 			// 
 			// textCarrera
 			// 
@@ -118,6 +121,7 @@ namespace CppCLRWinFormsProject {
 			this->textCarrera->Name = L"textCarrera";
 			this->textCarrera->Size = System::Drawing::Size(206, 20);
 			this->textCarrera->TabIndex = 4;
+			this->textCarrera->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &Form1::textBox_KeyDown);
 			// 
 			// btn_Guardar
 			// 
@@ -219,6 +223,11 @@ namespace CppCLRWinFormsProject {
 		this->db->cerrarConexion();
 	}
 	private: System::Void btn_Guardar_Click(System::Object^ sender, System::EventArgs^ e) {
+		if (this->txtNombre->Text == "" || this->textEdad->Text == "" || this->textCarrera->Text == "") {
+			MessageBox::Show("Por favor, complete todos los campos.");
+			return;
+		}
+
 		this->db->abrirConexion();
 		String^ nombre = this->txtNombre->Text;
 		int edad = Int32::Parse(this->textEdad->Text);
@@ -239,6 +248,7 @@ private: System::Void btn_Eliminar_Click(System::Object^ sender, System::EventAr
 	this->db->abrirConexion();
 	this->db->eliminarEstudiante(Int32::Parse(id));
 	this->db->cerrarConexion();
+	MessageBox::Show("El estudiante ha sido eliminado.");
 	this->consultarDatos();
 }
 private: System::Void data_grid_DoubleClick(System::Object^ sender, System::EventArgs^ e) {
@@ -252,7 +262,19 @@ private: Void sendDatos() {
 	String^ carrera = Convert::ToString(data_grid->SelectedRows[0]->Cells[3]->Value);
 	CRUD::EditEstudiante^ editForm = gcnew CRUD::EditEstudiante();
 	editForm->sendDatos(id, nombre, edad, carrera);
-	editForm->ShowDialog();
+	editForm -> ShowDialog();
+	this->consultarDatos();
+}
+private: System::Void textEdad_KeyPress(System::Object^ sender, System::Windows::Forms::KeyPressEventArgs^ e) {
+	if (!Char::IsControl(e->KeyChar) && !Char::IsDigit(e->KeyChar)) {
+		e->Handled = true;
+	}
+}
+private: System::Void textBox_KeyDown(System::Object^ sender, System::Windows::Forms::KeyEventArgs^ e) {
+	if (e->KeyCode == Keys::Enter) {
+		btn_Guardar_Click(sender, e);
+		e->SuppressKeyPress = true;
+	}
 }
 };
 }

@@ -1,3 +1,6 @@
-﻿  DB.cpp
+﻿  CppCLR_WinFormsProject.cpp
+  EditEstudiante.cpp
+  FormEstudiantes.cpp
+  Generando código...
   AssemblyInfo.obj : se encontró un módulo MSIL; vinculación incremental deshabilitada para MSIL; ejecutando vínculo completo
   CRUD.vcxproj -> C:\Users\sorec\source\repos\CRUD\x64\Debug\CRUD.exe

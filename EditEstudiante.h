@@ -30,7 +30,9 @@ namespace CRUD {
 				delete components;
 			}
 		}
-	private: System::Windows::Forms::TextBox^ txt_Nombre;
+	private: System::Windows::Forms::TextBox^ txt_nombre;
+	protected:
+
 	private: System::Windows::Forms::TextBox^ txt_edad;
 	private: System::Windows::Forms::TextBox^ txt_carrera;
 	private: DB^ db = gcnew DB();
@@ -59,7 +61,7 @@ namespace CRUD {
 		/// </summary>
 		void InitializeComponent(void)
 		{
-			this->txt_Nombre = (gcnew System::Windows::Forms::TextBox());
+			this->txt_nombre = (gcnew System::Windows::Forms::TextBox());
 			this->txt_edad = (gcnew System::Windows::Forms::TextBox());
 			this->txt_carrera = (gcnew System::Windows::Forms::TextBox());
 			this->label1 = (gcnew System::Windows::Forms::Label());
@@ -69,12 +71,13 @@ namespace CRUD {
 			this->btn_Cancelar = (gcnew System::Windows::Forms::Button());
 			this->SuspendLayout();
 			// 
-			// txt_Nombre
+			// txt_nombre
 			// 
-			this->txt_Nombre->Location = System::Drawing::Point(123, 47);
-			this->txt_Nombre->Name = L"txt_Nombre";
-			this->txt_Nombre->Size = System::Drawing::Size(163, 20);
-			this->txt_Nombre->TabIndex = 0;
+			this->txt_nombre->Location = System::Drawing::Point(123, 47);
+			this->txt_nombre->Name = L"txt_nombre";
+			this->txt_nombre->Size = System::Drawing::Size(163, 20);
+			this->txt_nombre->TabIndex = 0;
+			this->txt_nombre->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &EditEstudiante::textBox_KeyDown);
 			// 
 			// txt_edad
 			// 
@@ -82,6 +85,8 @@ namespace CRUD {
 			this->txt_edad->Name = L"txt_edad";
 			this->txt_edad->Size = System::Drawing::Size(163, 20);
 			this->txt_edad->TabIndex = 1;
+			this->txt_edad->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &EditEstudiante::textBox_KeyDown);
+			this->txt_edad->KeyPress += gcnew System::Windows::Forms::KeyPressEventHandler(this, &EditEstudiante::textEdad_KeyPress);
 			// 
 			// txt_carrera
 			// 
@@ -89,6 +94,7 @@ namespace CRUD {
 			this->txt_carrera->Name = L"txt_carrera";
 			this->txt_carrera->Size = System::Drawing::Size(163, 20);
 			this->txt_carrera->TabIndex = 2;
+			this->txt_carrera->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &EditEstudiante::textBox_KeyDown);
 			// 
 			// label1
 			// 
@@ -149,7 +155,7 @@ namespace CRUD {
 			this->Controls->Add(this->label1);
 			this->Controls->Add(this->txt_carrera);
 			this->Controls->Add(this->txt_edad);
-			this->Controls->Add(this->txt_Nombre);
+			this->Controls->Add(this->txt_nombre);
 			this->Name = L"EditEstudiante";
 			this->Text = L"Editar Estudiante";
 			this->ResumeLayout(false);
@@ -159,12 +165,17 @@ namespace CRUD {
 #pragma endregion
 
 	private: System::Void btn_Guardar_Click(System::Object^ sender, System::EventArgs^ e) {
-		String^ nombre = this->txt_Nombre->Text;
+		if (this->txt_nombre->Text == "" || this->txt_edad->Text == "" || this->txt_carrera->Text == "") {
+			MessageBox::Show("Por favor, complete todos los campos.");
+			return;
+		}
+		String^ nombre = this->txt_nombre->Text;
 		int edad = Int32::Parse(this->txt_edad->Text);
 		String^ carrera = this->txt_carrera->Text;
 		this->db->abrirConexion();
 		this->db->editarEstudiante(this->idEstudiante, nombre, edad, carrera);
 		this->db->cerrarConexion();
+		MessageBox::Show("El estudiante ha sido actualizado.");
 		this->Close();
 	}
 
@@ -172,18 +183,22 @@ namespace CRUD {
 		this->Close();
 	}
 
-	public: void sendDatos(int id, String^ nombre, String^ edad, String^ carrera) {
-		this->txt_Nombre->Text = nombre;
+	public: void sendDatos(System::String^ id, System::String^ nombre, System::String^ edad, System::String^ carrera) {
+		this->idEstudiante = Int32::Parse(id);
+		this->txt_nombre->Text = nombre;
 		this->txt_edad->Text = edad;
 		this->txt_carrera->Text = carrera;
 	}
-	
-	public: void sendDatos(System::String^ id, System::String^ nombre, System::String^ edad, System::String^ carrera) {
-		this->idEstudiante = Int32::Parse(id);
-		this->txt_Nombre->Text = nombre;
-		this->txt_edad->Text = edad;
-		this->txt_carrera->Text = carrera;
-		MessageBox::Show("ID Recibido: " + idEstudiante);
+	private: System::Void textEdad_KeyPress(System::Object^ sender, System::Windows::Forms::KeyPressEventArgs^ e) {
+		if (!Char::IsControl(e->KeyChar) && !Char::IsDigit(e->KeyChar)) {
+			e->Handled = true;
+		}
+	}
+	private: System::Void textBox_KeyDown(System::Object^ sender, System::Windows::Forms::KeyEventArgs^ e) {
+		if (e->KeyCode == Keys::Enter) {
+			btn_Guardar_Click(sender, e);
+			e->SuppressKeyPress = true;
+		}
 	}
 
 };
